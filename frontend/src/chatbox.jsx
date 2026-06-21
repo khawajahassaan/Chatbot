@@ -63,6 +63,7 @@ export default function Chatbot() {
 
     const isEmpty = messages.length === 0;
 
+    return (
         <div className="chat-page">
             <div className="chat-container">
                 
