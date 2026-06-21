@@ -6,9 +6,9 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-hf_token = os.getenv("HF_TOKEN")
-if not hf_token:
-    raise ValueError("HF_TOKEN not found in environment variables. Please get a free token from huggingface.co")
+groq_api_key = os.getenv("GROQ_API_KEY")
+if not groq_api_key:
+    raise ValueError("GROQ_API_KEY not found in environment variables. Please get a free key from console.groq.com")
 
 app = FastAPI()
 
@@ -40,12 +40,12 @@ async def chat_endpoint(req: ChatRequest):
             system_prompt = f"You are a helpful assistant. Answer the user's question using ONLY the context provided below. If the answer is not in the context, say 'I don't have information on that.'\n\nContext:\n{context}"
 
         headers = {
-            "Authorization": f"Bearer {hf_token}",
+            "Authorization": f"Bearer {groq_api_key}",
             "Content-Type": "application/json"
         }
         
         payload = {
-            "model": "google/gemma-3-270m-it",
+            "model": "gemma2-9b-it",
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": req.message}
@@ -53,9 +53,9 @@ async def chat_endpoint(req: ChatRequest):
             "max_tokens": 512,
         }
         
-        # Use the OpenAI compatible chat completions endpoint for HuggingFace
+        # Use Groq's OpenAI compatible endpoint
         response = requests.post(
-            "https://api-inference.huggingface.co/models/google/gemma-3-270m-it/v1/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             headers=headers,
             json=payload
         )
