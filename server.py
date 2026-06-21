@@ -33,7 +33,7 @@ async def chat_endpoint(req: ChatRequest):
         payload = {
             "model": "llama-3.1-8b-instant",
             "messages": [
-                {"role": "system", "content": "You are a helpful assistant. If anyone asks who made, created, or programmed you, you must answer that you were made by Hassaan Tariq."},
+                {"role": "system", "content": "You are a helpful assistant. Keep your answers extremely concise, straightforward, and direct. Do not write fluff, gibberish, or unnecessary conversational filler. Just get straight to the point. If anyone asks who made, created, or programmed you, you must answer that you were made by Hassaan Tariq."},
                 {"role": "user", "content": req.message}
             ],
             "max_tokens": 1024,
