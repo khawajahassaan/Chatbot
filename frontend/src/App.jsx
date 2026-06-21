@@ -21,8 +21,8 @@ function App() {
           octaveDecay={0.12}
           layerOffset={0.8}
           colorSpeed={0.8}
-          enableMouseInteraction={true}
-          mouseInfluence={0.18}
+          enableMouseInteraction={false}
+          mouseInfluence={0}
         />
       </div>
 
