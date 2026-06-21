@@ -42,12 +42,19 @@ export default function Chatbot() {
                     use_general_knowledge: useGeneralKnowledge
                 })
             });
+            
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`HTTP ${response.status}: ${text.substring(0, 100)}`);
+            }
+            
             const data = await response.json();
             setMessages([...newMessages, { role: 'bot', text: data.reply, time: getTime() }]);
         } catch (error) {
+            console.error(error);
             setMessages([...newMessages, {
                 role: 'bot',
-                text: '⚠️ Could not connect to the server. Make sure the Python backend is running.',
+                text: `⚠️ Server Error: ${error.message}`,
                 time: getTime()
             }]);
         } finally {

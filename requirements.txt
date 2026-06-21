@@ -4,3 +4,4 @@ chromadb
 google-generativeai
 pydantic
 python-dotenv
+pysqlite3-binary
