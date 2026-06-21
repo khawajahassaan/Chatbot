@@ -1,11 +1,6 @@
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import chromadb
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
@@ -26,17 +21,11 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-chroma_client = chromadb.Client()
-collection = chroma_client.create_collection(name="knowledge_base")
-
-collection.add(
-    documents=[
-        "The Sun is Yellow",
-        "The Sky is Blue",
-        "Fast is situated in Behens Colony"
-    ],
-    ids=["doc1", "doc2", "doc3"]
-)
+KNOWLEDGE_BASE = [
+    "The Sun is Yellow",
+    "The Sky is Blue",
+    "Fast is situated in Behens Colony"
+]
 
 class ChatRequest(BaseModel):
     message: str
@@ -45,20 +34,15 @@ class ChatRequest(BaseModel):
 @app.post("/api/chat")
 async def chat_endpoint(req: ChatRequest):
     try:
-
-        results = collection.query(
-            query_texts=[req.message], 
-            n_results=1 
-        )
-        
-        context = results['documents'][0][0] if results['documents'][0] else "No specific context found."
+        context = "\n".join(KNOWLEDGE_BASE)
 
         if req.use_general_knowledge:
             prompt = f"""
             You are a helpful assistant. Try to answer the user's question using the context provided below. 
             If the context is not relevant or doesn't contain the answer, use your own general knowledge to answer the question.
             
-            Context: {context}
+            Context:
+            {context}
             
             User Question: {req.message}
             """
@@ -67,7 +51,8 @@ async def chat_endpoint(req: ChatRequest):
             You are a helpful assistant. Answer the user's question using ONLY the context provided below. 
             If the answer is not in the context, say "I don't have information on that."
             
-            Context: {context}
+            Context:
+            {context}
             
             User Question: {req.message}
             """
