@@ -152,7 +152,7 @@ export default function Chatbot() {
                 </div>
 
                 <div className="chat-footer-hint">
-                    Powered by Gemini · RAG Architecture
+                    Made by Hassaan Tariq
                 </div>
             </div>
         </div>
