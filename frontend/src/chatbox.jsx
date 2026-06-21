@@ -37,7 +37,8 @@ export default function Chatbot() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: userMessage.text
+                    message: userMessage.text,
+                    history: messages.map(m => ({ role: m.role, text: m.text }))
                 })
             });
             

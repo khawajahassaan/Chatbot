@@ -19,8 +19,15 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+from typing import List
+
+class MessageItem(BaseModel):
+    role: str
+    text: str
+
 class ChatRequest(BaseModel):
     message: str
+    history: List[MessageItem] = []
 
 @app.post("/api/chat")
 async def chat_endpoint(req: ChatRequest):
@@ -30,12 +37,22 @@ async def chat_endpoint(req: ChatRequest):
             "Content-Type": "application/json"
         }
         
+        # Build message history
+        api_messages = [
+            {"role": "system", "content": "You are a helpful assistant. Keep your answers extremely concise, straightforward, and direct. Do not write fluff, gibberish, or unnecessary conversational filler. Just get straight to the point. If anyone asks who made, created, or programmed you, you must answer that you were made by Hassaan Tariq."}
+        ]
+        
+        # Append previous messages
+        for msg in req.history:
+            role = "assistant" if msg.role == "bot" else "user"
+            api_messages.append({"role": role, "content": msg.text})
+            
+        # Append current message
+        api_messages.append({"role": "user", "content": req.message})
+        
         payload = {
             "model": "llama-3.1-8b-instant",
-            "messages": [
-                {"role": "system", "content": "You are a helpful assistant. Keep your answers extremely concise, straightforward, and direct. Do not write fluff, gibberish, or unnecessary conversational filler. Just get straight to the point. If anyone asks who made, created, or programmed you, you must answer that you were made by Hassaan Tariq."},
-                {"role": "user", "content": req.message}
-            ],
+            "messages": api_messages,
             "max_tokens": 1024,
         }
         
