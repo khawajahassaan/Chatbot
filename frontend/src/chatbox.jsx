@@ -92,13 +92,6 @@ export default function Chatbot() {
                         <div className="empty-state">
                             <div className="empty-icon">💬</div>
                             <p className="empty-text">Ask me anything!</p>
-                            <div className="suggestion-chips">
-                                {SUGGESTIONS.map((s) => (
-                                    <button key={s} className="chip" onClick={() => sendMessage(s)}>
-                                        {s}
-                                    </button>
-                                ))}
-                            </div>
                         </div>
                     ) : (
                         messages.map((msg, idx) => (
@@ -153,7 +146,7 @@ export default function Chatbot() {
                 </div>
 
                 <div className="chat-footer-hint">
-                    Made by Hassaan Tariq
+                    Made by <a href="https://www.linkedin.com/in/khawaja-hassaan-tariq/" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>Hassaan Tariq</a>
                 </div>
             </div>
         </div>
