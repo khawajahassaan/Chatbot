@@ -19,26 +19,12 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-KNOWLEDGE_BASE = [
-    "The Sun is Yellow",
-    "The Sky is Blue",
-    "Fast is situated in Behens Colony"
-]
-
 class ChatRequest(BaseModel):
     message: str
-    use_general_knowledge: bool = False
 
 @app.post("/api/chat")
 async def chat_endpoint(req: ChatRequest):
     try:
-        context = "\n".join(KNOWLEDGE_BASE)
-
-        if req.use_general_knowledge:
-            system_prompt = f"You are a helpful assistant. Try to answer the user's question using the context provided below. If the context is not relevant, use your own general knowledge.\n\nContext:\n{context}"
-        else:
-            system_prompt = f"You are a helpful assistant. Answer the user's question using ONLY the context provided below. If the answer is not in the context, say 'I don't have information on that.'\n\nContext:\n{context}"
-
         headers = {
             "Authorization": f"Bearer {groq_api_key}",
             "Content-Type": "application/json"
@@ -47,9 +33,9 @@ async def chat_endpoint(req: ChatRequest):
         payload = {
             "model": "gemma2-9b-it",
             "messages": [
-                {"role": "user", "content": f"{system_prompt}\n\n{req.message}"}
+                {"role": "user", "content": req.message}
             ],
-            "max_tokens": 512,
+            "max_tokens": 1024,
         }
         
         # Use Groq's OpenAI compatible endpoint

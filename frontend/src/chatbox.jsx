@@ -15,7 +15,6 @@ export default function Chatbot() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [useGeneralKnowledge, setUseGeneralKnowledge] = useState(false);
     const chatEndRef = useRef(null);
 
     useEffect(() => {
@@ -38,8 +37,7 @@ export default function Chatbot() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: userMessage.text,
-                    use_general_knowledge: useGeneralKnowledge
+                    message: userMessage.text
                 })
             });
             
@@ -86,30 +84,13 @@ export default function Chatbot() {
                     </div>
                 </div>
 
-                {/* ── Toggle ── */}
-                <div className="toggle-container">
-                    <label className="toggle-label">
-                        <div className="toggle-switch">
-                            <input
-                                type="checkbox"
-                                checked={useGeneralKnowledge}
-                                onChange={(e) => setUseGeneralKnowledge(e.target.checked)}
-                            />
-                            <span className="slider"></span>
-                        </div>
-                        <span className="toggle-text">Use general knowledge fallback</span>
-                    </label>
-                    <span className={`toggle-badge ${useGeneralKnowledge ? 'active' : ''}`}>
-                        {useGeneralKnowledge ? '✦ AI Enhanced' : 'KB Only'}
-                    </span>
-                </div>
 
                 {/* ── Messages ── */}
                 <div className="chat-box">
                     {isEmpty ? (
                         <div className="empty-state">
                             <div className="empty-icon">💬</div>
-                            <p className="empty-text">Ask me anything from the knowledge base — or enable AI fallback for anything else.</p>
+                            <p className="empty-text">Ask me anything!</p>
                             <div className="suggestion-chips">
                                 {SUGGESTIONS.map((s) => (
                                     <button key={s} className="chip" onClick={() => sendMessage(s)}>
