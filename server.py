@@ -45,7 +45,9 @@ async def chat_endpoint(req: ChatRequest):
             json=payload
         )
         
-        response.raise_for_status()
+        if not response.ok:
+            return {"reply": f"Groq Error {response.status_code}: {response.text}"}
+        
         data = response.json()
         
         reply = data["choices"][0]["message"]["content"]
