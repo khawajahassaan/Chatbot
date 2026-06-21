@@ -47,8 +47,7 @@ async def chat_endpoint(req: ChatRequest):
         payload = {
             "model": "gemma2-9b-it",
             "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": req.message}
+                {"role": "user", "content": f"{system_prompt}\n\n{req.message}"}
             ],
             "max_tokens": 512,
         }
