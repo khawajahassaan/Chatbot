@@ -31,7 +31,7 @@ async def chat_endpoint(req: ChatRequest):
         }
         
         payload = {
-            "model": "gemma2-9b-it",
+            "model": "llama-3.1-8b-instant",
             "messages": [
                 {"role": "user", "content": req.message}
             ],
